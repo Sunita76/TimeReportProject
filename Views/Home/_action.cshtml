@@ -1,0 +1,61 @@
+﻿@model TimeReportProject.ViewModels.ProjectViewModel
+
+ <div class="modal-content">
+            <div class="modal-header bg-primary text-white text-center">
+              
+                @if(Model.ProjectID >0 )
+                {
+                  <h5 class="modal-title">Edit project details</h5>     
+                 }
+                 else
+                 {
+                   <h5 class="modal-title">Add new project details</h5>     
+                 }
+       
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-primary">
+
+                    <div class="panel-body">
+
+                        <form id="projectform" method="post" asp-action="ProjectDetails" asp-controller="Home">
+                            <div class="row bottom bottom-buffer-small ">
+                                <input type="hidden" value ="@Model.ProjectID" name = "ProjectID" />
+
+                                <div class="col-lg-2">
+                                    @Html.Label("ProjectName","Project Name",new { @class = "form-control-static" })
+                                </div>
+                                <div class="col-lg-8">
+
+                                    @Html.TextBoxFor(model => model.ProjectName, new { @class = "form-control input-sm", @placeholder=" Name of the Project" , @maxLength = 50 ,@required="required"})
+                                    @Html.ValidationMessageFor(model => model.ProjectName ,"", new {@class = "text-danger"})
+                                </div>
+
+                            </div>
+                            <div class="row bottom bottom-buffer-small ">
+
+                                <div class="col-lg-2"> @Html.Label("ProjectDesc", "Description", new { @class = "form-control-static" })</div>
+                                <div class="col-lg-8">
+                                    @Html.TextAreaFor(model => model.ProjectDesc, new { @class = "form-control input-sm",@maxlength="200",rows=5 })
+                                </div>
+                            </div>
+                            <div class="row bottom bottom-buffer-small "><div class="col-lg-12"></div></div>
+                            <div class="row bottom bottom-buffer-small">
+                                <div class="col-lg-12 text-center">
+                                    <button id="btnSave" type="submit" class="btn btn-sm btn-primary">Save Details</button>
+
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+
+        </div>

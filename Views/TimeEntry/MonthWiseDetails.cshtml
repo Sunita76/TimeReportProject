@@ -1,0 +1,181 @@
+﻿@using System.Runtime.Serialization
+@model TimeReportProject.ViewModels.MonthWiseViewModel 
+ <div id=displayresults>
+  <div class="container" style="padding-top:50px">
+    <div class="row">
+        <div class="panel panel-default">
+
+            <div class="panel-heading text-center">
+                
+                <div class="panel-title">Month Wise Schedule</div>
+            </div>
+
+               <div class="panel-body">     
+                  
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form id="projectform" method="post" asp-action="MonthWiseDetailsSearch" asp-controller="TimeEntry">
+                            <div id="div1" runat="server" class="panel panel-primary"   >
+                                <div class="panel-heading text-center" style="padding:0px;">Options</div>
+                                <div class="panel-body">
+                                <div class=row>
+                                 <div class="col-lg-2">@Html.Label("YearID", "Year", new { @class = "form-control-static" })</div>
+                                 <div class="col-lg-4 form-inline">@Html.DropDownListFor(x => x.YearID , Model.Years, new { @class = "form-control dropdown input-sm" ,@id="YearID"})
+                                 <span style="color:red">*</span>
+                                
+                                 </div>
+                                 <div class="col-lg-2">@Html.Label("MonthID", "Month Name", new { @class = "form-control-static" })</div>
+                                 <div class="col-lg-4">@Html.DropDownListFor(x => x.MonthID , Model.Months, new { @class = "form-control dropdown input-sm" ,@id="MonthID"})</div>
+                                 
+                                 
+                                </div>
+                                <div class="row">
+                                     <div class="col-lg-2">@Html.Label("ProjectID", "Project Name", new { @class = "form-control-static" })</div>
+                                      <div class="col-lg-4">@Html.DropDownListFor(x => x.ProjectID, Model.Projects , new { @class = "form-control dropdown input-sm", @id="ProjectID" })</div>
+                                       <div class="col-lg-2">@Html.Label("UserID", "Consultant Name", new { @class = "form-control-static" })</div>
+                                        <div class="col-lg-4">@Html.DropDownListFor(x => x.UserID , Model.Users , new { @class = "form-control dropdown input-sm",@id="UserID" })</div>
+                        
+                                </div>                          
+                               
+                                <div class=row>
+                                    <div class="col-lg-12  text-center">
+                                         <button id="btnSearch" type="submit" class="btn btn-sm btn-primary">Search</button>
+
+ 
+                                    </div>
+                                </div>
+                                
+                                
+                                </div>
+                            </div>
+                            </form> 
+                        </div>
+                    </div>
+                
+                
+                
+              @if(Model.MonthWise != null)
+                    {
+                         @if(Model.MonthWise.Count>0)
+                {     
+                 <div class=row>
+                  <div class=col-lg-12>
+                    <table id = "monthwise" class="table  table-bordered  table-condensed table-fixedhead">
+                    <thead class="bg-primary" style="font-size:12px">
+                        <tr><td>Project Name</td><td>Consultant Name</td><td>Month</td><td align="right">No of Working Hours</td></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var detail in Model.MonthWise )
+                        {
+                            <tr style="font-size:12px">
+                               <td width=35%>@detail.ProjectName </td>
+                                <td width=30%>@detail.ConsultantName </td>
+                                <td width=15%> @detail.MonthName </td>
+                                <td width=10% align="right" >@detail.NoOfHours</td>
+                                
+                            </tr>
+
+                        }
+
+                     </tbody>
+                    </table>
+               
+                 </div>
+               </div>
+               <nav id = "navpage" aria-label="Page navigation example">
+                <ul class="pagination justify-content-center d-flex flex-wrap">
+                 @if (Model.Pager.CurrentPage > 1)
+                 {
+             
+                  <li class="page-item">
+                     <a href="#" class="page-link" data-pageno="@(Model.Pager.CurrentPage - 1)">Previous</a>
+                   
+                  </li>
+                 }
+                 @if (Model.Pager.StartPage != Model.Pager.EndPage)
+                 {
+                  @for (var p = Model.Pager.StartPage; p <= Model.Pager.EndPage; p++)
+                   {
+                    <li class="page-item @(p == Model.Pager.CurrentPage ? "active" : "")">
+                      <a class="page-link" href="#" data-pageno="@p">@p</a>
+                    </li>
+                   }
+                 }
+                 @if (Model.Pager.CurrentPage < Model.Pager.TotalPages)
+                 {
+                  <li class="page-item">
+                    <a class="page-link" href="#" data-pageno="@(Model.Pager.CurrentPage + 1)">Next</a>
+                  </li>
+              
+                 }
+                </ul>     
+               </nav>
+                
+               }
+                else
+                {
+                  
+                    <div class="row">
+                        <div class="col-lg-10">
+                           <h6 style="color:maroon">No records found for the Report.</h6>
+                        </div>
+
+                     </div>
+                  
+                }
+
+                    }
+                   
+               </div> 
+               
+            </div>
+        
+     </div>
+    </div>
+</div>
+
+@section scripts{
+<script type="text/javascript">
+
+    $(document).ready(function () {
+       $(document).on("click", '.pagination >li', function (e) {
+                var pageNo = $(this).find('a').attr("data-pageNo");
+                $.ajax({
+                url: '@Url.Action("MonthWiseDetailsSearch", "TimeEntry")',
+                type: "POST",
+                data: {
+                   ProjectId : $("#ProjectID").val(),
+                   MonthID: $("#MonthID").val(),
+                   userid : $("#UserID").val(),
+                   pageNo: pageNo
+                    
+                  }
+                
+                })
+                  .success(function (response) {
+                      $("#displayresults").html(response);
+           
+                  })
+                  .done(function (response) {
+                  })
+
+                .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("FAIL");
+                });
+            });
+        $('#btnSearch').click(function()
+        {
+          const year = $("#YearID").val();
+          if(year == "")
+          {
+              alert("Select the Year");
+              $("#monthwise").empty();
+              $("#navpage").empty();
+              return false;
+          }
+        });
+            
+    })
+    </script>
+}
+

@@ -1,0 +1,203 @@
+﻿@model TimeReportProject.ViewModels.ConsultantProjectViewModel
+<div class="container" style="padding-top:50px">
+    <div class="row">
+        <div class="panel panel-default">
+
+            <div class="panel-heading text-center">
+
+                <div class="panel-title"> Enter the Time Details</div>
+            </div>
+
+            <div class="panel-body">
+                <form id="timeentryform" method="post" asp-controller="TimeEntry" asp-action="EnterTimeDetails">
+                    <input hidden value= "@Model.ID" name="ID" id="ID" />
+
+                    <div class="row bottom bottom-buffer-small">
+                        <div class="col-lg-2"> @Html.Label("ConsultantName", "Consultant Name", new { @class = "form-control-static" })</div>
+                        <div class="col-lg-6"> @Html.TextBoxFor(model => model.ConsultantName, new { @class = "form-control input-sm", @readonly = "readonly" })</div>
+
+                    </div>
+                    <div class="row bottom">
+
+                        <div class="col-lg-2">@Html.Label("EntryDate", "Reporting Date", new { @class = "form-control-static" })</div>
+                        <div class="col-lg-2">
+                        @Html.TextBoxFor(model => model.EntryDate, new { @class = "form-control input-sm", @maxlength = "10" ,@id="EntryDate"})
+                        @*@Html.ValidationMessageFor(model => model.EntryDate , "", new {@class = "text-danger validation-message"})*@
+                        </div>
+                       
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2">@Html.Label("ProjectName", "Project Name", new { @class = "form-control-static" })</div>
+                        <div class="col-lg-4">@Html.DropDownListFor(x => x.ProjectID, Model.ProjectList, new { @class = "form-control dropdown input-sm" })</div>
+                        @*@Html.ValidationMessageFor(model => model.ProjectID,"", new {@class = "text-danger validation-message"})*@
+                    </div>
+                    <div class="row bottom">
+                        <div class="col-lg-2">@Html.Label("StartTime", "Working Hours", new { @class = "form-control-static" })</div>
+                        <div class="col-lg-2">
+                            @Html.TextBoxFor(model => model.StartTime, new { @class = "form-control input-sm", @maxlength = "7", @id = "StartTime"  })
+                            @*@Html.ValidationMessageFor(model => model.StartTime ,"", new {@class = "text-danger validation-message"})*@
+                        </div>
+                        <div class="col-lg-1">-</div>
+
+                        <div class="col-lg-2">
+                           @Html.TextBoxFor(model => model.EndTime, new { @class = "form-control input-sm", @maxlength = "7", @id = "EndTime"})
+                           @*@Html.ValidationMessageFor(model => model.EndTime,"", new {@class = "text-danger"})*@
+                        </div>
+
+                    </div>
+                    <div class="row bottom">
+                        <div class="col-lg-2">@Html.Label("StartLunchTime", "Lunch Time", new { @class = "form-control-static" })</div>
+                        <div class="col-lg-2">@Html.TextBoxFor(model => model.StartLunchTime, new { @class = "form-control input-sm", @maxlength = "7", @id = "SLunchTime" })</div>
+                        @*@Html.ValidationMessageFor(model => model.StartLunchTime,"", new {@class = "text-danger"})*@
+                        <div class="col-lg-1">-</div>
+                        <div class="col-lg-2">@Html.TextBoxFor(model => model.EndLunchTime, new { @class = "form-control input-sm", @maxlength = "7", @id = "ELunchTime"})</div>
+                        @*@Html.ValidationMessageFor(model => model.EndLunchTime ,"", new {@class = "text-danger"})*@
+                    </div> 
+                     <div class="row bottom">
+                        <div class="col-lg-2">@Html.Label("Comments", "Additional Information", new { @class = "form-control-static" })</div>
+                        <div class="col-lg-6">@Html.TextBoxFor(model => model.Comments , new { @class = "form-control input-sm", @maxlength = "100", @id = "Comments" })</div>
+                       
+                    </div> 
+                   
+                    <div class="row bottom">
+                        <div class="col-lg-12">
+                            @Html.ValidationSummary(false, "", new { @class = "alert-danger"})
+                        </div>
+                    </div>
+                    <div class="row bottom bottom-buffer-small">
+                        <div class="col-lg-12 text-center">
+                            <button id="btnSave" type="submit" class="btn btn-sm btn-primary" >Save Details</button>
+
+                        </div>
+                    </div>
+                    <div class= "row bottom">
+                        <div class="col-lg-12">
+                            <h6 style="color:maroon">@ViewBag.Message</h6>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        function convertTime(timeStr)
+    {
+      const [time, modifier] = timeStr.split(' ');
+          let [hours, minutes] = time.split(':');
+         
+          if (hours == '12')
+          {
+           hours = '00';
+          }
+         if (modifier == 'PM')
+          {
+           hours = parseInt(hours) + 12;
+         
+          }
+         return (parseInt(hours*60) + parseInt(minutes));
+    }
+
+        $(document).ready(function () {
+             $('#btnSave').click(function()
+         {
+        const timeS = $("#SLunchTime").val();
+        const timeE = $("#ELunchTime").val();
+        const timeStart = $("#StartTime").val();
+        const timeEnd = $("#EndTime").val();
+        if (timeStart != "" && timeEnd == "")
+        {  
+          alert("Enter the End time");
+         // $("[id$=EndTime]").focus();
+          return false;
+        }
+        if (timeEnd !="" && timeStart =="")
+        {
+            alert("Enter the Start time");
+           // $("[id$=StartTime]").focus();
+            return false;
+        }
+         if (timeS != "" && timeE == "")
+        {  
+          alert("Enter the Lunch end time");
+          //$("[id$=ELunchTime]").focus();
+          return false;
+        }
+        if (timeE !="" && timeS == "")
+        {
+            alert("Enter the Lunch start time");
+            //$("[id$=SLunchTime]").focus();
+            return false;
+        }
+        if (convertTime(timeStart) >= convertTime(timeEnd))
+        {
+      
+           alert("From time cannot be greater than the To Time");
+           return false;
+        }
+
+        if (convertTime(timeS)>=convertTime(timeE))
+        {
+          alert("Lunch From time cannot be greater than the Lunch To Time");
+          return false;
+        }
+       });
+  
+
+        $("[id$=EntryDate]").datepicker({
+            showOn: 'focus',
+            dateFormat: 'mm/dd/yy'
+        });
+        $("[id$=StartTime]").timepicker({
+            timeFormat: 'h:mm p',
+            interval: 10,
+            minTime: '8:00am',
+            maxTime: '5:00pm',
+            showDuration:true,
+            //startTime: '8:00am',
+            dynamic:false,
+            dropdown: true,
+            scrollbar: true,
+             showOn:'focus'
+        });
+        $("[id$=EndTime]").timepicker({
+            timeFormat: 'h:mm p',
+            interval: 10,
+            minTime: '8:00am',
+	        maxTime: '05:00pm',
+	        showDuration: true,
+            dynamic:false,
+            dropdown: true,
+            scrollbar: true,
+            showOn:'focus'
+        });
+        $("[id$=SLunchTime]").timepicker({
+            timeFormat: 'h:mm p',
+            interval: 10,
+            minTime: '8:00am',
+            maxTime: '5:00pm',
+            showDuration:true,
+            dynamic: false,
+            dropdown: true,
+            scrollbar: true,
+             showOn:'focus'
+        });
+         $("[id$=ELunchTime]").timepicker({
+            timeFormat: 'h:mm p',
+            interval: 10,
+            minTime: '8:00am',
+            maxTime: '5:00pm',
+            showDuration:true,
+            dynamic: false,
+            dropdown: true,
+            scrollbar: true,
+             showOn:'focus'
+        });
+      
+
+    })
+
+  
+    </script>
+    }

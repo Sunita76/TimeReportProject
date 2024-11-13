@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TimeReportProject</title>
+     <link href="~/fa/css/font-awesome.min.css" rel="Stylesheet" type="text/css" />  
+    <link href="~/css/DARKBLUETheme/css/bootstrap.css" rel="stylesheet" />
+        <link rel="stylesheet" href="~/css/site.css" />
+        <link href="~/jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet" />
+        <link href="~/css/myApp.css" rel="stylesheet" />
+        <link href="~/css/jquery.timepicker.css" rel="stylesheet" />
+
+
+       
+</head>
+<body>
+    <header>
+     
+       <nav class="navbar navbar-default navbar-light bg-light navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">EasyToTrust</a>
+            </div>
+            
+            <div class="navbar-collapse collapse">
+            @if(User.Identity.IsAuthenticated )
+            {
+                <ul class="nav navbar-nav">
+                   @if(User.Identity.Name.ToLower()=="admin@easytotrust.com".ToLower())
+                        {
+                            <li><a asp-area="" asp-controller="TimeEntry" asp-action="MonthWiseDetails">Month Wise Report</a></li>
+                            <li><a asp-area="" asp-controller="TimeEntry" asp-action="DateWiseDetails">Date Wise Report</a></li>
+                            <li><a asp-area="" asp-controller="Home" asp-action="GetProjectDetails">Projects</a></li>
+
+                        }
+                        else
+                        {
+                            <li><a asp-area="" asp-controller="TimeEntry" asp-action="EnterTimeDetails">Time Schedule</a></li>    
+                        }
+                        
+                </ul>    
+                }    
+                
+                @await Html.PartialAsync("_LoginPartial")
+            </div>
+        </div>
+    </nav>
+ 
+        
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    
+     <script src="~/lib/jquery/dist/jquery.js"></script>
+      <script src="~/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+      <script src= "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.js"></script>
+      <script src="~/lib/jquery.timepicker.js"></script>
+      <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+      <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+
+ 

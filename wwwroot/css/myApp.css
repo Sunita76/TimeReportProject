@@ -1,0 +1,46 @@
+﻿body {
+}
+.form-control-static {
+    font-size: 12px !important;
+}
+.form-control{
+    font-size:12px !important;
+}
+.panel-default > .panel-heading {
+    background-color: #0a5084;
+    color:white;
+}
+
+/* CIRCLED BUTTONS */
+/* New style for circled buttons */
+.btn.btn-circle {
+    padding: 0;
+    border-radius: 50%;
+}
+/* Header part */
+
+.head {
+    height: 70px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.navbar.navbar-default .navbar-brand {
+    height: auto;
+    padding: 22px 15px 21px;
+}
+
+.btn-circle {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+   
+}
+
+    .btn-circle.btn-sm {
+        width: 13px;
+        height: 13px;
+        min-width: 13px;
+    }
+
+   

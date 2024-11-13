@@ -1,0 +1,97 @@
+﻿@model TimeReportProject.ViewModels.ProjectViewModel
+
+<div class="container" style="padding-top:50px">
+    <div class="row">
+        <div class="panel panel-default">
+
+            <div class="panel-heading text-center">
+                <div class="pull-left">
+                    <button type="button" ID="btnNew" data-href="@Url.Action("AddProjectDetails","Home")" title="Add a new project" data-toggle="modal" data-target="#modalProject" Class="btn btn-sm btn-primary btn-circle panel-left" Value="Add" style="width:30px;height:30px;min-width:30px;filter:brightness(125%);">+</button>
+                </div>
+                <div class="panel-title">Project Details</div>
+            </div>
+
+            <div class="panel-body">
+                @if(Model.Projects != null)
+                {
+                    @if(Model.Projects.Count > 0)
+                {
+                <table class="table  table-bordered  table-condensed table-fixedhead">
+                    <thead class="bg-primary" style="font-size:12px">
+                        <tr><td></td><td> Project Name</td><td>Description</td></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var project in Model.Projects)
+                        {
+                           <tr style="font-size:12px">
+                              
+                                <td width:5%><button type="button" data-href="@Url.Action("EditProjectDetails","Home", new{ ID = project.ProjectID })" id="btnEdit" title = "Edit the details"  class= " data-btn btn btn-sm btn-primary btn-block" data-toggle="modal" data-target="#modalProject"><i class="fa fa-edit" ></i> </button></td>
+                                <td width:45%> @project.ProjectName  </td>
+                                <td width:50%>@project.ProjectDesc  </td>
+                            </tr>
+
+                        }
+                    </tbody>
+                    </table>
+                }
+                else
+                {
+                  <div class="container">
+                    <div class="row">
+                        <div class="col-lg-10">
+                           <h6 style="color:maroon">No Projects found.</h6>
+                        </div>
+
+                     </div>
+                  </div>
+
+                }
+
+                }
+                
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- .modal -->
+<div class="modal fade" id="modalProject" role="dialog">
+    <div class="modal-dialog">
+       
+    </div>
+</div>
+
+@section scripts{
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#btnNew').click(function()
+        {  
+          $.ajax({
+           url: $(this).attr("data-href"),
+           }).done(function (response) {
+              
+               $("#modalProject .modal-dialog").html(response);
+        
+           });
+           
+	    })
+        //changed the id of the Edit button to the class for Edit button.
+        $(".data-btn").click(function()
+        {
+           $.ajax({
+            url: $(this).attr("data-href"),
+            }).done(function (response) {
+           
+              $("#modalProject .modal-dialog").html(response);
+        
+            });
+        })
+
+        
+    });
+</script>
+    }
+
